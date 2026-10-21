@@ -1,0 +1,11 @@
+bin/
+obj/
+.vs/
+.idea/
+*.user
+*.suo
+*.log
+.DS_Store
+.env
+TestResults/
+node_modules/

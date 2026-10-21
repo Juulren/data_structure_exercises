@@ -1,0 +1,57 @@
+// Ejecutar contra una instancia de pruebas: este script reinicia las cinco listas.
+const assert = require('node:assert/strict');
+const base = process.env.TEST_BASE_URL || 'http://localhost:5080';
+let checks = 0;
+async function call(path, method = 'GET', data, status = 200, message) {
+  const response = await fetch(`${base}/api/listas/${path}`, { method, headers: data === undefined ? {} : { 'Content-Type': 'application/json' }, body: data === undefined ? undefined : JSON.stringify(data) });
+  assert.equal(response.status, status, `${method} ${path}`);
+  const body = await response.json();
+  assert.equal(body.success, status < 400);
+  if (message) assert.equal(body.message, message);
+  checks++;
+  return body.data;
+}
+(async () => {
+  for (let id = 1; id <= 5; id++) await call(`${id}/reiniciar`, 'DELETE');
+  await call('supermercado', 'POST');
+  let state = await call('supermercado', 'POST');
+  assert.equal(state.totalDisponibles, 2);
+  await call('supermercado/1', 'PUT', { cantidad: '5', precio: '1,25' });
+  state = await call('supermercado/1', 'DELETE');
+  assert.equal(state.unidadesRetiradas, 5); assert.equal(state.retirados[0].precio, 1.25);
+  await call('supermercado/1', 'DELETE', undefined, 404, 'El elemento no existe');
+  for (const cantidad of ['abc', '1.5', '2147483648']) await call('numeros', 'POST', { cantidad }, 400, 'Introducir sólo números');
+  await call('numeros', 'POST', {}, 400, 'Hay datos faltantes');
+  await call('numeros', 'POST', { cantidad: '' }, 400, 'Hay datos faltantes');
+  await call('numeros', 'POST', { cantidad: '0' }, 400, 'La cantidad debe estar entre 1 y 100');
+  state = await call('numeros', 'POST', { cantidad: '100' });
+  assert.equal(state.original.length, 100);
+  assert.deepEqual(state.pares, state.original.filter(n => n % 2 === 0));
+  assert.deepEqual(state.impares, state.original.filter(n => n % 2 !== 0));
+  await call('alumnos', 'POST', { nombre: '', calificacion: '8' }, 400, 'Hay datos faltantes');
+  await call('alumnos', 'POST', { nombre: 'Ana', calificacion: 'ocho' }, 400, 'Introducir sólo números');
+  await call('alumnos', 'POST', { nombre: 'Ana', calificacion: '10.1' }, 400, 'La calificación debe estar entre 0 y 10');
+  await call('alumnos', 'POST', { nombre: 'Ana', calificacion: '6,99' });
+  state = await call('alumnos', 'POST', { nombre: 'Luis', calificacion: '7' });
+  assert.equal(state.aprobados.length, 1); assert.equal(state.reprobados.length, 1);
+  state = await call('alumnos/1', 'PUT', { nombre: 'Ana', calificacion: '9.5' });
+  assert.equal(state.aprobados.length, 2); assert.equal(state.reprobados.length, 0);
+  await call('alumnos/2', 'DELETE');
+  await call('catalogo', 'POST', { clave: 'Z', nombre: 'Zanahoria', precio: '0.20' });
+  state = await call('catalogo', 'POST', { clave: 'A', nombre: 'Arroz', precio: '0.10' });
+  assert.equal(state.total, .30); assert.equal(state.productos[0].nombre, 'Arroz');
+  await call('catalogo', 'POST', { clave: 'a', nombre: 'Repetido', precio: '1' }, 409, 'La clave del producto ya existe');
+  await call('catalogo', 'POST', { clave: 'B', nombre: 'Leche', precio: '-1' }, 400, 'El precio debe estar entre 0 y 1000000');
+  await call('catalogo', 'PUT', { clave: 'Z', nombre: 'Aceite', precio: '2,25' });
+  state = await call('catalogo?clave=z', 'DELETE'); assert.equal(state.total, .10);
+  for (const texto of ['Fresa', 'fresca', 'Oso', 'Pez', 'Árbol', 'A\u0301guila']) await call('palabras', 'POST', { texto });
+  state = await call('palabras'); assert.equal(state.grupos.length, 4); assert.equal(state.grupos.find(g => g.letra === 'Á').palabras.length, 2);
+  await call('palabras/3', 'PUT', { texto: 'Zorro' });
+  state = await call('palabras/3', 'DELETE'); assert.equal(state.grupos.length, 3);
+  await call('palabras', 'POST', { texto: '<script>' }, 400, 'Introduce una sola palabra, únicamente con letras');
+  await call('6/reiniciar', 'DELETE', undefined, 404, 'El elemento no existe');
+  const malformed = await fetch(`${base}/api/listas/alumnos`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{' });
+  assert.equal(malformed.status, 400); assert.equal((await malformed.json()).success, false); checks++;
+  for (let id = 1; id <= 5; id++) await call(`${id}/reiniciar`, 'DELETE');
+  console.log(`API: ${checks} solicitudes verificadas correctamente.`);
+})().catch(error => { console.error(error); process.exitCode = 1; });
