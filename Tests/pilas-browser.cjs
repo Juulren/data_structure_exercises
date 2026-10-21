@@ -105,7 +105,7 @@ const base = process.env.TEST_BASE_URL || 'http://localhost:5080';
     await page.reload(); await ready(); await page.locator('#btnReintentarPila').waitFor();
     await page.unroute('**/api/pilas/invertir'); await page.locator('#btnReintentarPila').click(); await ready();
     assert.equal(await page.locator('#lblErrorPila').isVisible(), false);
-    await page.goto(`${base}/#ejercicio-10`); await page.getByText('Pendiente de implementación · Fase 10').waitFor();
+    await page.goto(`${base}/#ejercicio-10`); await page.locator('#pnlColaResultados[aria-busy="false"]').waitFor();
     assert.deepEqual(errors, []);
     for (let id = 6; id <= 9; id++) await page.request.delete(`${base}/api/pilas/${id}/reiniciar`);
     console.log('Pilas UI: cuatro ejercicios, controles de reproducción, acarreos, reemplazos, validaciones, errores de red, persistencia, reinicio, móvil y movimiento reducido correctos.');

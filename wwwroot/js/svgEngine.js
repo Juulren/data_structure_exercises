@@ -22,3 +22,18 @@ export function drawStack(items, label, id, tone = 'green') {
     return `<g class="stack-block"><title>${escapeHtml(value)}</title><rect x="57" y="${y}" width="126" height="32" rx="7"/><text x="120" y="${y + 21}" text-anchor="middle">${escapeHtml(value.length > 14 ? value.slice(0, 13) + '…' : value)}</text>${index === 0 ? `<path class="top-arrow" d="M15 ${y + 16}h34m-6 -5 6 5 -6 5"/>` : ''}</g>`;
   }).join('') : '<text x="120" y="90" text-anchor="middle">Pila vacía</text>'}<text class="stack-caption" x="120" y="22" text-anchor="middle">${items.length ? 'TOPE · próximo Pop' : 'Push para comenzar'}</text>${items.length > visible.length ? `<text class="stack-caption" x="120" y="${height - 30}" text-anchor="middle">+ ${items.length - visible.length} elementos en la base</text>` : ''}</svg><details class="stack-values"><summary>Ver pila completa (tope → base)</summary><p>${items.length ? items.map(escapeHtml).join(' · ') : 'Sin elementos'}</p></details></div>`;
 }
+
+export function carVector(color = '#b4c2b5', label = 'Automóvil') {
+  return `<svg class="car-vector" viewBox="0 0 150 85" role="img" aria-label="${escapeHtml(label)}"><path d="M12 48l14-5 16-24h56l21 24 17 6v19H12z" fill="${color}" stroke="#385447" stroke-width="2"/><path d="M48 25h20v19H35zm27 0h18l17 19H75z" fill="#f3f8ee"/><circle cx="38" cy="68" r="12" fill="#344b3d"/><circle cx="112" cy="68" r="12" fill="#344b3d"/><circle cx="38" cy="68" r="5" fill="#e7eee1"/><circle cx="112" cy="68" r="5" fill="#e7eee1"/><path d="M15 52h13m95 0h10" stroke="#fff3bc" stroke-width="5"/></svg>`;
+}
+
+export function drawCircularQueue(autos) {
+  if (!autos.length) return '<p class="empty-state">El callejón está vacío. Ingresa un auto para enlazar el primer nodo consigo mismo.</p>';
+  const width = Math.max(420, autos.length * 180 + 80);
+  return `<div class="node-scroll" role="region" tabindex="0" aria-label="Cola circular doblemente ligada"><svg class="circular-svg" width="${width}" height="205" viewBox="0 0 ${width} 205" role="img" aria-label="${autos.length} autos enlazados en ambos sentidos; final conecta con frente"><text x="30" y="22">Salida · Frente</text><text x="${width - 130}" y="22">Entrada · Final</text>${autos.map((auto, index) => {
+    const x = 30 + index * 180;
+    const icon = carVector('#9fbd9e', `Auto ${auto.placas}`).replace('class="car-vector"', `x="${x + 48}" y="68" width="45" height="26"`);
+    const plate = auto.placas.length > 15 ? auto.placas.slice(0, 14) + '…' : auto.placas;
+    return `<g class="linked-node"><title>${escapeHtml(auto.placas)}</title><rect x="${x}" y="65" width="140" height="65" rx="12"/>${icon}<text x="${x + 70}" y="109" text-anchor="middle">${escapeHtml(plate)}</text><text class="circular-caption" x="${x + 70}" y="124" text-anchor="middle">${index + 1} · auto #${auto.id}</text>${index < autos.length - 1 ? `<path d="M${x + 140} 82h40m-6 -5 6 5 -6 5 M${x + 180} 113h-40m6 -5 -6 5 6 5"/>` : ''}</g>`;
+  }).join('')}<path d="M${30 + (autos.length - 1) * 180 + 90} 65V40H100v25m-5 -6 5 6 5 -6 M100 130v40h${(autos.length - 1) * 180 + 20}v-40m-5 6 5 -6 5 6"/><text class="circular-caption" x="${width / 2}" y="195" text-anchor="middle">Siguiente → / ← Anterior · los extremos cierran el círculo</text></svg></div>`;
+}

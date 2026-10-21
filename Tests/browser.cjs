@@ -80,7 +80,7 @@ const base = process.env.TEST_BASE_URL || 'http://localhost:5080';
     await page.setViewportSize({ width: 1440, height: 1000 });
     await go(1); assert.equal(await page.locator('#dgvRetirados tbody tr').count(), 1);
     await page.locator('summary').click(); assert.equal(await page.locator('.eps').isVisible(), true);
-    await page.goto(`${base}/#ejercicio-10`); await page.getByText('Pendiente de implementación · Fase 10').waitFor();
+    await page.goto(`${base}/#ejercicio-10`); await page.locator('#pnlColaResultados[aria-busy="false"]').waitFor();
     assert.deepEqual(errors, []);
     for (let id = 1; id <= 5; id++) await page.request.delete(`${base}/api/listas/${id}/reiniciar`);
     console.log('UI: cinco ejercicios, edición, retiro, clasificación, validaciones, recarga, reinicio, navegación y móvil correctos; sin errores JavaScript.');

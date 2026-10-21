@@ -1,5 +1,6 @@
 import { mountListas } from './listas.js';
 import { mountPilas } from './pilas.js';
+import { mountColas } from './colas.js';
 
 const modules = [
   { name: 'Listas', icon: '↗', description: 'Conecta nodos, organiza información y descubre el recorrido de una lista.', exercises: ['Productos disponibles y retirados', 'Pares e impares', 'Aprobados y reprobados', 'Eliminar y ordenar productos', 'Palabras por letra'] },
@@ -44,11 +45,11 @@ function render() {
   } else if (selected && Number(match[1]) <= 9) {
     disposeView = mountPilas(view, Number(match[1]), notify);
   } else if (selected) {
-    view.innerHTML = `<section class="pending"><span class="eyebrow">${selected.module.toUpperCase()} / EJERCICIO ${match[1]}</span><h1 id="lblTitulo">${selected.title}</h1><span class="badge">Pendiente de implementación · Fase ${match[1]}</span><p class="intro">Este espacio se habilitará durante su fase de desarrollo. El menú ya permite recorrer todos los ejercicios sin reiniciar la aplicación.</p><details><summary>Descripción y análisis E-P-S</summary><p class="intro">${selected.title}: práctica de ${selected.module.toLowerCase()} mediante estructuras personalizadas en C#.</p><div class="eps"><div><h3>Entradas</h3><p>Los datos y sus validaciones se incorporarán en la fase ${match[1]}.</p></div><div><h3>Proceso</h3><p>Operaciones de ${selected.module.toLowerCase()} implementadas en el servidor.</p></div><div><h3>Salida</h3><p>Resultados y visualización interactiva al habilitar el ejercicio.</p></div></div></details><a class="text-link" href="#inicio">← Volver a la vista general</a></section>`;
+    disposeView = mountColas(view, Number(match[1]), notify);
   } else {
     view.innerHTML = `<div class="hero"><div><span class="eyebrow">TU ESPACIO PARA EXPERIMENTAR</span><h1 id="lblTitulo">Las estructuras cobran <em>vida.</em></h1><p class="intro">Un laboratorio para entender listas, pilas y colas paso a paso. Explora cada operación y descubre qué ocurre detrás del código.</p><div class="hero-actions"><a class="primary" href="#ejercicio-1" style="text-decoration:none">Explorar ejercicios ↗</a><button id="btnVerFase" class="secondary">Acerca de esta fase</button></div></div>${diagram}</div><div class="section-heading"><h2>Tres estructuras. Un recorrido.</h2><span>01 — 12 / UNIDAD II</span></div><div class="cards">${modules.map(module => `<article class="card"><div class="module-icon" aria-hidden="true">${module.icon}</div><h3>${module.name}</h3><p>${module.description}</p><div class="card-bottom"><span>${module.exercises.length} ejercicios</span><a class="text-link" href="#ejercicio-${exercises.findIndex(e => e.module === module.name)+1}">Explorar →</a></div></article>`).join('')}</div><div class="note"><strong>Primero, los cimientos.</strong> La fase 0 incluye el servidor, la navegación y la interfaz base. Los ejercicios se construirán uno por uno, con validaciones y visualizaciones propias.</div>`;
     const note = view.querySelector('.note');
-    note.innerHTML = '<strong>Listas y pilas están listas.</strong> Explora nueve ejercicios con datos en memoria y visualizaciones de cada proceso. Las pilas incluyen controles para recorrer las operaciones paso a paso. Colas se habilitará en el siguiente módulo.';
+    note.innerHTML = '<strong>Los tres módulos están listos.</strong> Explora los 12 ejercicios con estructuras propias, visualizaciones y datos en memoria. Recorre las pilas paso a paso, administra turnos y autos o juega a pintar coches respetando el orden FIFO.';
     document.querySelector('#btnVerFase').addEventListener('click', () => document.querySelector('#dlgInformacion').showModal());
   }
   closeMenu();
