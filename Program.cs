@@ -5,6 +5,7 @@ using DataStructureExercises.Services.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IListasService, ListasService>();
+builder.Services.AddSingleton<IPilasService, PilasService>();
 builder.Services.AddControllers().ConfigureApiBehaviorOptions(options =>
 {
     options.InvalidModelStateResponseFactory = context =>
@@ -43,7 +44,7 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 app.MapGet("/", () => Results.File(Path.Combine(app.Environment.WebRootPath, "index.html"), "text/html; charset=utf-8"));
 app.MapControllers();
-app.MapGet("/api/estado", () => ApiResponse<object>.Ok(new { fase = 5, ejercicios = 12, implementados = 5 }, "Aplicación lista"));
+app.MapGet("/api/estado", () => ApiResponse<object>.Ok(new { fase = 9, ejercicios = 12, implementados = 9 }, "Aplicación lista"));
 app.MapFallback(async context =>
 {
     context.Response.StatusCode = 404;

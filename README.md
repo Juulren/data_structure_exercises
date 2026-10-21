@@ -1,6 +1,6 @@
 # Laboratorio de estructuras de datos
 
-Aplicación de la Unidad II con ASP.NET Core 8, HTML, CSS y JavaScript modular. Las fases 0 a 5 están implementadas. Pilas y colas permanecen pendientes y se identifican así en el menú.
+Aplicación de la Unidad II con ASP.NET Core 8, HTML, CSS y JavaScript modular. Las fases 0 a 9 están implementadas: módulos de listas y pilas completos. El módulo de colas permanece pendiente y se identifica así en el menú.
 
 ## Ejecutar
 
@@ -23,16 +23,24 @@ Los datos se conservan en memoria en un servicio Singleton, compartido entre las
 | 3 | Aprobados y reprobados | Registrar y editar calificaciones decimales de 0–10. Extraer menores de 7 a la lista de reprobados y reubicar al editar. Permite eliminar alumnos. |
 | 4 | Catálogo de compras | Agregar con clave única, editar, eliminar por clave, ordenar por nombre con reglas de español y sumar precios con `decimal`. Las claves no distinguen mayúsculas. |
 | 5 | Palabras por letra | Lista general y listas enlazadas por inicial, creadas dinámicamente. Agregar, editar y eliminar palabras; conservar duplicados, acentos y ñ. Las iniciales ignoran mayúsculas; Á y A son grupos diferentes. |
+| 6 | Invertir palabra | Insertar caracteres con Push y extraerlos con Pop. Animación paso a paso, conservando caracteres Unicode combinados y emojis. Hasta 80 caracteres visibles, sin espacios interiores. |
+| 7 | Palíndromo | Comparar palabras, números o frases con los elementos extraídos de una pila. Ignorar mayúsculas, espacios, signos y acentos; conservar ñ como letra distinta. Hasta 120 caracteres normalizados y 1000 unidades UTF-16 de entrada. |
+| 8 | Suma de números grandes | Sumar dos enteros no negativos de hasta 1000 dígitos cada uno con tres pilas propias. Mostrar operand-stack1, operand-stack2, result-stack y cada acarreo. Sin conversión del número completo a tipos numéricos. Normalizar ceros iniciales. |
+| 9 | Reemplazar valor | Push, Peek, Pop y reemplazo de todas las coincidencias utilizando una pila auxiliar, conservando el orden. Hasta 100 enteros de 32 bits, incluidos negativos y repetidos. |
 
 Todas las vistas incluyen descripción, E-P-S y diagramas SVG desplazables. Hay formularios con etiquetas flotantes, notificaciones, animaciones con soporte para movimiento reducido y navegación adaptable. La interfaz espera la respuesta del servidor y muestra sus errores.
+
+En las fases 6–8 el servidor devuelve el resultado y la traza del proceso. Los controles permiten avanzar, retroceder, reproducir, pausar o saltar a cualquier paso sin repetir cálculos en el navegador. Las pilas muestran hasta 12 bloques SVG y permiten consultar todos sus valores en un panel desplegable; la tabla muestra las operaciones cercanas al paso elegido. La reproducción se detiene al navegar. Se conserva el último resultado de cada fase en memoria.
 
 ## Arquitectura
 
 - `Models/Structures/`: nodos y `ListaSimple<T>` implementados desde cero, con inserción, iteración, reemplazo, extracción, limpieza y ordenamiento por reenlace. Contrato `IEstructuraLineal<T>` y clase abstracta `EstructuraLineal<T>` para genericidad, herencia y polimorfismo.
+- `Models/Structures/PilaPersonalizada.cs`: pila genérica de nodos propios que hereda de `EstructuraLineal<T>`, con Push, Pop, Peek, recorrido desde el tope y limpieza. No utiliza `Stack<T>` de la biblioteca estándar.
 - `Models/Entities/` y `Models/Common/`: entidades inmutables, snapshots de respuesta y errores de negocio.
 - `Services/Interfaces/` y `Services/Implementations/`: reglas de los cinco ejercicios, inyección de dependencias y exclusión mutua para evitar corrupción por solicitudes simultáneas.
 - `Controllers/ListasController.cs`: rutas REST y conversión estricta de entradas numéricas. Los números del formulario viajan como cadenas JSON para validar letras y campos vacíos con los mensajes exigidos. Se admite coma o punto decimal, sin separadores de miles. Cantidades son enteras; precios no negativos hasta $1,000,000 con hasta dos decimales.
 - `wwwroot/js/api.js`, `listas.js` y `svgEngine.js`: transporte, vistas y diagramas desacoplados. El contenido introducido por el usuario se escapa antes de renderizarlo.
+- `PilasController`, `IPilasService`, `PilasService` y `wwwroot/js/pilas.js`: HTTP, reglas del módulo 2 y visualización de las trazas. El servicio Singleton protege su estado mediante exclusión mutua. `Reemplazar(PilaPersonalizada<int> pila, int nuevo, int viejo)` usa exclusivamente Pop/Push y una pila auxiliar para conservar el orden.
 
 Los ejercicios 1, 3, 4 y 5 admiten hasta 500 elementos cada uno, para mantener manejable la visualización. El supermercado cuenta disponibles y retirados juntos para ese límite.
 
@@ -55,6 +63,19 @@ Todas las respuestas tienen `{ success, message, data }`. Errores: 400 para entr
 
 `GET /api/estado` informa la fase implementada y la cantidad de ejercicios disponibles.
 
+Rutas del módulo de pilas bajo `/api/pilas` (entradas numéricas como cadenas JSON):
+
+| Ruta | Operaciones |
+| --- | --- |
+| `/invertir` | GET último resultado (null si no existe), POST con `{ "texto": "UTM" }` |
+| `/palindromo` | GET último resultado, POST con `{ "texto": "Anita lava la tina" }` |
+| `/suma` | GET último resultado, POST con `{ "operando1": "592", "operando2": "3784" }` |
+| `/valores` | GET consultar pila y tope, POST con `{ "valor": "2" }`, PUT con `{ "nuevo": "9", "viejo": "2" }` |
+| `/valores/tope` | DELETE extraer tope (409 si la pila está vacía) |
+| `/{fase}/reiniciar` | DELETE reiniciar únicamente la fase indicada (6 a 9) |
+
+Cada nuevo POST de las fases 6–8 sustituye el resultado anterior solo si las entradas son válidas. Los enteros grandes aceptan únicamente dígitos ASCII del 0 al 9, sin signos, puntos, comas ni notación científica. Los valores de la fase 9 aceptan signo y rango de `int`; el desbordamiento se informa como `Introducir sólo números`. Reemplazar en una pila no vacía sin coincidencias deja la pila intacta e informa cero reemplazos.
+
 ## Pruebas
 
 Pruebas automatizadas de estructura y servicio:
@@ -63,10 +84,11 @@ Pruebas automatizadas de estructura y servicio:
 dotnet test Tests/DataStructureExercises.Tests.csproj
 ```
 
-Las pruebas de integración y navegador necesitan una instancia en http://localhost:5080. **Reinician los cinco ejercicios**; ejecutarlas en una instancia de pruebas sin datos que se deseen conservar. Se puede cambiar la dirección con `TEST_BASE_URL`.
+Las pruebas de integración y navegador necesitan una instancia en http://localhost:5080. **Reinician los ejercicios del módulo que prueban**; ejecutarlas en una instancia de pruebas sin datos que se deseen conservar. Se puede cambiar la dirección con `TEST_BASE_URL`.
 
 ```powershell
 node Tests/api.cjs
+node Tests/pilas-api.cjs
 ```
 
 Para navegador (Node.js y Playwright; instalar solo en el entorno de desarrollo):
@@ -75,12 +97,15 @@ Para navegador (Node.js y Playwright; instalar solo en el entorno de desarrollo)
 npm install --no-save --package-lock=false playwright
 npx playwright install chromium
 node Tests/browser.cjs
+node Tests/pilas-browser.cjs
 ```
 
 En Windows se puede usar Edge instalado: `$env:TEST_BROWSER_CHANNEL = 'msedge'`. Si Playwright está en otro directorio, `PLAYWRIGHT_MODULE` puede apuntar a ese módulo.
 
 Las pruebas cubren extracción de cabeza/medio/final, reutilización, ordenamiento, conservación de productos, partición de números, límites de calificaciones, reubicación al editar, claves duplicadas, totales decimales, agrupación Unicode, reinicios independientes, concurrencia, validaciones HTTP y flujos de los cinco ejercicios en escritorio y móvil. Las capturas de navegador se guardan en `TestResults/`, ignorado por Git.
 
+Las pruebas de pilas cubren LIFO, Peek sin extracción, subflujo, capacidad, palabras Unicode, todos los ejemplos de palíndromos del plan, frases con acentos, suma de 1000 dígitos y acarreos encadenados, 50 sumas aleatorias comparadas con `BigInteger` únicamente en las pruebas, conservación del orden al reemplazar duplicados, enteros límite y concurrencia. Las pruebas de navegador verifican reproducción y cancelación al navegar, tres pilas, errores de red, persistencia tras recargar, reinicio, móvil y movimiento reducido.
+
 ## Flujo de entrega
 
-Codex ejecuta las pruebas y realiza el commit y el push a [GitHub](https://github.com/Juulren/data_structure_exercises). El usuario confirma el avance a las siguientes fases. Las fases 1 a 5 se implementaron juntas por indicación expresa del usuario.
+Codex ejecuta las pruebas y realiza el commit y el push a [GitHub](https://github.com/Juulren/data_structure_exercises). El usuario confirma el avance al siguiente módulo. Las fases 1–5 y 6–9 se implementaron por módulos completos por indicación expresa del usuario.
