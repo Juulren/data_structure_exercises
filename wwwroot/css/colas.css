@@ -1,1 +1,82 @@
-.select-field select{width:100%;padding:22px 30px 10px 14px;border:1px solid #99ab9d;border-radius:10px;background:#fbfcf9;color:#203c33;font:inherit;font-size:13px}.select-field label{top:6px;font-size:10px}.select-field select:focus-visible{outline:3px solid #cc7a30;outline-offset:3px}.queue-tools{display:flex;flex-wrap:wrap;gap:8px}.queue-track{display:flex;gap:12px;align-items:center;overflow-x:auto;padding:16px 4px;border-radius:14px;background:#f5f8f0;min-height:160px}.client-token{flex:0 0 130px;display:grid;gap:7px;text-align:center;padding:15px;border-radius:16px;background:#e4eedd;overflow-wrap:anywhere;font-size:12px}.client-token svg{width:75px;height:70px;margin:auto;fill:#6c9879;stroke:#38624a;stroke-width:2}.client-token small{color:var(--muted);font-size:10px}.queue-arrow{color:#6f967b;font-size:24px}.car-vector{width:145px;max-width:100%;display:block;margin:5px auto}.palette{border:0;padding:18px 0 0;display:flex;gap:10px;flex-wrap:wrap;margin:20px 0 0}.palette legend{font-size:13px;font-weight:600}.color-button{border:1px solid #c4d2c1;border-radius:24px;background:#fafcf7;display:flex;align-items:center;gap:8px;padding:11px 16px;color:#203c33;font-size:12px}.color-button:hover:not(:disabled){box-shadow:0 0 0 3px var(--paint);border-color:transparent}.color-dot,.requested-color{display:inline-block;width:17px;height:17px;border-radius:50%;background:var(--paint);border:1px solid #0002}.color-button:disabled{cursor:default}.requested-color{width:12px;height:12px;margin-right:6px}.game-rules{display:flex;align-items:center;gap:20px;flex-wrap:wrap}.game-rules p{font-size:13px;line-height:1.8;flex:1;min-width:200px;color:var(--muted)}.game-scene-heading{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.game-scene-heading>span{font-size:12px;color:var(--muted)}.attended-zone{background:#e5efdd;border-radius:16px;max-width:230px;min-height:140px;text-align:center;padding:18px;margin:18px 0;display:grid;gap:8px;font-size:12px}.attended-zone p{color:var(--muted);line-height:1.7}.game-scene h3{font-size:13px}.game-scene h3 span{float:right}.car-token{flex:0 0 170px;padding:15px 12px;border:1px solid #d6dfce;border-radius:16px;text-align:center;background:#fff}.car-token>span{font-size:10px;color:var(--muted);display:block}.car-token strong{font-size:13px;display:block}.front-car{background:#e6efdc;border:2px solid #79a377}.car-track{align-items:stretch;gap:15px}.car-track .empty-state{width:100%;margin:0}.circular-svg{display:block}.circular-svg rect{fill:#e4efde;stroke:#8bae94}.circular-svg path{fill:none;stroke:#57896b;stroke-width:1.5}.circular-svg text{font:13px Segoe UI,sans-serif;fill:#28503a}.circular-svg .circular-caption{font-size:10px;fill:#617b65}.parking-ticket{padding:10px 0}.parking-ticket dl, #pnlColaInfo dl{display:grid;grid-template-columns:1fr 1.3fr;gap:12px 16px;font-size:13px}.parking-ticket dt,#pnlColaInfo dt{color:var(--muted)}.parking-ticket dd,#pnlColaInfo dd{margin:0;overflow-wrap:anywhere}.ticket-total{font-size:20px;color:var(--primary);font-weight:600}#dlgColaInfo{width:560px;max-width:calc(100vw - 32px);max-height:90vh;overflow:auto}#lblColaInfoTitulo{font-size:19px;line-height:1.5}#pnlColaInfo{font-size:14px;line-height:1.8;margin-bottom:20px}#pnlColaInfo .parking-ticket dl{line-height:1.5}.queue-arrival{animation:arrive .35s ease}@keyframes arrive{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}@media(max-width:760px){.queue-tools{width:100%}.queue-tools button{flex:1;font-size:11px}.metrics>span{min-width:180px}.parking-ticket dl,#pnlColaInfo dl{grid-template-columns:1fr;gap:5px}.parking-ticket dd,#pnlColaInfo dd{margin-bottom:12px}.palette{gap:8px}.color-button{padding:10px 12px}.car-token{flex-basis:155px}}@media(prefers-reduced-motion:reduce){.queue-arrival{animation:none}}
+/* Módulo de colas: banco, juego y estacionamiento */
+.select-field select { appearance: none; -webkit-appearance: none; padding-right: 40px; font-size: 15px; cursor: pointer; }
+.select-field::after { content: ''; position: absolute; right: 18px; top: 24px; width: 8px; height: 8px; border-right: 2px solid var(--md-on-surface-variant); border-bottom: 2px solid var(--md-on-surface-variant); transform: rotate(45deg); pointer-events: none; }
+.select-field label { top: 7px; font-size: 12px; }
+.select-field:focus-within label { color: var(--md-primary); }
+.queue-tools { display: flex; flex-wrap: wrap; gap: 8px; }
+.queue-track { display: flex; gap: 12px; align-items: center; overflow-x: auto; padding: 16px; border-radius: var(--shape-lg); background: var(--md-surface-container-low); min-height: 160px; scrollbar-width: thin; }
+.client-token {
+  flex: 0 0 136px; display: grid; gap: 6px; text-align: center; padding: 16px 12px; border-radius: var(--shape-lg);
+  background: var(--md-tertiary-container); color: var(--md-on-tertiary-container); overflow-wrap: anywhere; font-size: 13px;
+  box-shadow: var(--elev-1); transition: transform .3s var(--ease-emphasized), box-shadow .3s;
+}
+.client-token:hover { transform: translateY(-3px); box-shadow: var(--elev-2); }
+.client-token:first-child { background: var(--md-primary); color: var(--md-on-primary); }
+.client-token:first-child svg { fill: var(--md-primary-container); stroke: var(--md-on-primary); }
+.client-token:first-child small { color: inherit; opacity: .85; }
+.client-token svg { width: 72px; height: 66px; margin: auto; fill: var(--md-surface-container-lowest); stroke: var(--md-tertiary); stroke-width: 2.5; }
+.client-token small { color: var(--md-on-tertiary-container); opacity: .75; font-size: 11px; }
+.queue-arrow { color: var(--md-tertiary); font-size: 22px; animation: point 1.6s ease-in-out infinite; }
+.car-vector { width: 145px; max-width: 100%; display: block; margin: 6px auto; filter: drop-shadow(0 3px 3px rgb(var(--md-shadow) / .15)); }
+.palette { border: 0; padding: 20px 0 0; display: flex; gap: 10px; flex-wrap: wrap; margin: 20px 0 0; border-top: 1px solid var(--md-outline-variant); }
+.palette legend { font: 600 14px var(--font-brand); padding: 0; margin-bottom: 12px; float: left; width: 100%; }
+.color-button {
+  position: relative; overflow: hidden; isolation: isolate; display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 8px 16px 8px 10px;
+  border: 1px solid var(--md-outline-variant); border-radius: var(--shape-sm); background: var(--md-surface-container-low); color: var(--md-on-surface); font-size: 13px; font-weight: 500;
+  transition: box-shadow .2s, border-color .2s, transform .15s var(--ease-emphasized);
+}
+.color-button:hover:not(:disabled) { box-shadow: 0 0 0 3px var(--paint); border-color: transparent; }
+.color-button:active:not(:disabled) { transform: scale(.95); }
+.color-dot, .requested-color { display: inline-block; width: 20px; height: 20px; border-radius: 50%; background: var(--paint); box-shadow: inset 0 0 0 1px rgb(0 0 0 / .15); }
+.color-button:disabled { cursor: default; }
+.requested-color { width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; }
+.game-rules { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.game-rules p { font-size: 14px; line-height: 1.8; flex: 1; min-width: 220px; color: var(--md-on-surface-variant); margin: 0; }
+.game-scene-heading { display: flex; justify-content: space-between; align-items: center; gap: 15px; flex-wrap: wrap; }
+.game-scene-heading h2 { margin: 0 !important; }
+.game-scene-heading > span { font: 500 12px var(--font-mono); color: var(--md-on-surface-variant); }
+#lblEstadoJuego { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: var(--shape-sm); background: var(--md-secondary-container); color: var(--md-on-secondary-container); font-size: 14px; }
+#lblEstadoJuego::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.game-scene[data-estado="En curso"] #lblEstadoJuego { background: var(--md-primary-container); color: var(--md-on-primary-container); }
+.game-scene[data-estado="En curso"] #lblEstadoJuego::before { animation: pulse 1s infinite; }
+.game-scene[data-estado="Finalizado"] #lblEstadoJuego { background: var(--md-error-container); color: var(--md-on-error-container); }
+.attended-zone { background: var(--md-primary-container); color: var(--md-on-primary-container); border-radius: var(--shape-lg); max-width: 240px; min-height: 140px; text-align: center; padding: 18px; margin: 18px 0; display: grid; gap: 8px; font-size: 13px; }
+.attended-zone p { color: inherit; opacity: .8; line-height: 1.7; margin: 0; }
+.game-scene h3 { font-size: 14px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.game-meter { display: grid; gap: 6px; margin: 0 0 14px; font-size: 12px; color: var(--md-on-surface-variant); }
+.car-token { flex: 0 0 170px; padding: 14px 12px; border: 1px solid var(--md-outline-variant); border-radius: var(--shape-lg); text-align: center; background: var(--md-surface-container-lowest); box-shadow: var(--elev-1); }
+.car-token > span { font-size: 11px; color: var(--md-on-surface-variant); display: block; letter-spacing: .4px; }
+.car-token strong { font-size: 14px; display: block; }
+.front-car { background: var(--md-primary-container); border: 2px solid var(--md-primary); color: var(--md-on-primary-container); animation: glow 1s ease-in-out infinite; }
+.front-car > span { color: inherit; font-weight: 600; }
+.car-track { align-items: stretch; gap: 15px; }
+.car-track .empty-state { width: 100%; margin: 0; }
+.circular-svg { display: block; }
+.circular-svg rect { fill: var(--md-tertiary-container); stroke: var(--md-tertiary); }
+.circular-svg path { fill: none; stroke: var(--md-tertiary); stroke-width: 1.5; }
+.circular-svg text { font: 500 13px var(--font-plain); fill: var(--md-on-tertiary-container); }
+.circular-svg > text { fill: var(--md-on-surface); font-weight: 600; }
+.circular-svg .circular-caption { font: 500 10px var(--font-mono); fill: var(--md-on-surface-variant); }
+.parking-ticket { padding: 10px 0; }
+.parking-ticket dl, #pnlColaInfo dl { display: grid; grid-template-columns: 1fr 1.3fr; gap: 12px 16px; font-size: 14px; }
+.parking-ticket dt, #pnlColaInfo dt { color: var(--md-on-surface-variant); }
+.parking-ticket dd, #pnlColaInfo dd { margin: 0; overflow-wrap: anywhere; font-weight: 500; }
+.ticket-total { font: 600 22px var(--font-mono); color: var(--md-primary); }
+#dlgColaInfo { width: 560px; max-width: calc(100vw - 32px); max-height: 90vh; overflow: auto; }
+#lblColaInfoTitulo { font-size: 18px; line-height: 1.5; letter-spacing: .3px; }
+#pnlColaInfo { font-size: 14px; line-height: 1.8; margin-bottom: 20px; }
+#pnlColaInfo .parking-ticket dl { line-height: 1.5; }
+#dlgColaInfo form { display: flex; justify-content: flex-end; }
+.queue-arrival { animation: arrive .45s var(--ease-decelerate); }
+@keyframes glow { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--md-primary) 18%, transparent); } }
+@media (max-width: 760px) {
+  .queue-tools { width: 100%; }
+  .queue-tools button { flex: 1; font-size: 13px; }
+  .metrics > span { min-width: 160px; }
+  .parking-ticket dl, #pnlColaInfo dl { grid-template-columns: 1fr; gap: 4px; }
+  .parking-ticket dd, #pnlColaInfo dd { margin-bottom: 12px; }
+  .palette { gap: 8px; }
+  .color-button { padding: 8px 12px 8px 8px; }
+  .car-token { flex-basis: 155px; }
+}
+@media (prefers-reduced-motion: reduce) { .queue-arrival { animation: none; } }

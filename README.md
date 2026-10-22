@@ -39,6 +39,16 @@ El juego comienza vacío y el primer coche llega a los 20 segundos. El servidor 
 
 Banco y estacionamiento registran fechas UTC con el reloj del servidor (`TimeProvider.System`), y la interfaz muestra horas de Ciudad de México. Las esperas y el cobro se calculan con ticks y `decimal`, conservando fracciones de segundo. El ticket presenta hasta siete decimales, sin redondear previamente el tiempo a segundos enteros. El banco permite 10 clientes simultáneos y reutiliza lugares atendidos; el estacionamiento no impone ese límite. La opción Actualizar permite consultar cambios hechos en otra pestaña.
 
+## Interfaz (Material Design 3)
+
+- **Sistema de diseño:** tokens de color, forma y elevación de Material 3 en `wwwroot/css/material.css`, con modo claro y oscuro (sigue al sistema y se puede alternar desde la barra superior; la elección se recuerda en el navegador). Tipografía Inter para títulos y Roboto para texto.
+- **Componentes:** tarjetas con elevación dinámica que sigue al puntero, efecto *ripple* en botones, enlaces y chips, chips de estado, campos con etiqueta flotante, snackbar y diálogos limpios.
+- **FAB y modales CRUD:** cada vista registra su acción principal en el Floating Action Button (escanear, nuevo alumno, nuevo producto, nuevo cliente, entrada de auto, iniciar partida…). Crear desde el FAB o pulsar *Editar* abre el formulario en un modal; el formulario en línea sigue disponible.
+- **Animaciones:** transición tipo SPA al cambiar de ejercicio, entrada escalonada de tarjetas, micro-interacciones en botones e íconos, barras de progreso animadas (recorrido por módulo, ocupación del banco, coches en la fila, avance de la traza) y una barra de carga global para peticiones lentas.
+- **Vectores en movimiento:** ondas SVG en la barra superior y en los encabezados, red de nodos conectados y figuras geométricas flotando en el fondo, ilustración animada de lista, pila y cola en la portada e íconos SVG animados.
+- **Responsividad:** drawer completo en escritorio (colapsable a riel), riel en tablet y drawer modal con *Bottom Navigation* en móvil.
+- Todas las animaciones se desactivan con `prefers-reduced-motion`.
+
 ## Arquitectura
 
 - `Models/Structures/`: nodos y `ListaSimple<T>` implementados desde cero, con inserción, iteración, reemplazo, extracción, limpieza y ordenamiento por reenlace. Contrato `IEstructuraLineal<T>` y clase abstracta `EstructuraLineal<T>` para genericidad, herencia y polimorfismo.
@@ -47,6 +57,7 @@ Banco y estacionamiento registran fechas UTC con el reloj del servidor (`TimePro
 - `Services/Interfaces/` y `Services/Implementations/`: reglas de los cinco ejercicios, inyección de dependencias y exclusión mutua para evitar corrupción por solicitudes simultáneas.
 - `Controllers/ListasController.cs`: rutas REST y conversión estricta de entradas numéricas. Los números del formulario viajan como cadenas JSON para validar letras y campos vacíos con los mensajes exigidos. Se admite coma o punto decimal, sin separadores de miles. Cantidades son enteras; precios no negativos hasta $1,000,000 con hasta dos decimales.
 - `wwwroot/js/api.js`, `listas.js` y `svgEngine.js`: transporte, vistas y diagramas desacoplados. El contenido introducido por el usuario se escapa antes de renderizarlo.
+- `wwwroot/js/ui.js` y `background.js`: componentes compartidos (íconos SVG, FAB, modales de formulario que trasladan el formulario existente sin duplicarlo, barras de progreso y ondas) y la red de nodos animada del fondo.
 - `PilasController`, `IPilasService`, `PilasService` y `wwwroot/js/pilas.js`: HTTP, reglas del módulo 2 y visualización de las trazas. El servicio Singleton protege su estado mediante exclusión mutua. `Reemplazar(PilaPersonalizada<int> pila, int nuevo, int viejo)` usa exclusivamente Pop/Push y una pila auxiliar para conservar el orden.
 - `ColaConLimite<T>` utiliza un arreglo circular propio, con ColaLlena, ColaVacia, Enqueue, Peek, Dequeue, reemplazo y limpieza. `ColaCircularDoble<T>` utiliza nodos propios con enlaces recíprocos y circulares, sin `Queue<T>` ni `LinkedList<T>` de la biblioteca estándar. Ambas heredan de `EstructuraLineal<T>`.
 - `ColasController`, `IColasService`, `ColasService` y `wwwroot/js/colas.js`: módulo 3, reglas FIFO y visualizaciones. `TimeProvider` inyectado permite probar el paso del tiempo sin esperas reales. Las mutaciones y snapshots del Singleton están protegidos por exclusión mutua.

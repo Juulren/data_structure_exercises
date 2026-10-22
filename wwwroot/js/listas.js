@@ -1,5 +1,6 @@
 import { request } from './api.js';
 import { drawList, escapeHtml as esc, scanner } from './svgEngine.js';
+import { createFormDialog, setFab } from './ui.js';
 
 const money = value => new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(value);
 const specs = {
@@ -64,8 +65,19 @@ export function mountListas(container, id, notify) {
   const reset = root.querySelector('#btnReiniciar');
   const dialog = root.querySelector('#dlgReiniciar');
   let state, editing = null, busy = false;
+  const formDialog = createFormDialog(root, () => { if (editing !== null) clearEdit(); });
+  const openForm = title => formDialog.open(title, [form, formStatus, errorLabel], editing === null ? 'plus' : 'edit');
+  const fabs = { 1: ['Escanear producto', 'scan'], 2: ['Generar números', 'plus'], 3: ['Nuevo alumno', 'plus'], 4: ['Nuevo producto', 'plus'], 5: ['Nueva palabra', 'plus'] };
+  setFab({ label: fabs[id][0], iconName: fabs[id][1], action: () => {
+    if (id === 1) { root.querySelector('#btnEscanear').click(); return; }
+    if (editing !== null) clearEdit();
+    errorLabel.hidden = true;
+    openForm(fabs[id][0]);
+    form.querySelector('input').focus();
+  } });
 
   function clearEdit() {
+    formDialog.close();
     editing = null;
     form.reset();
     const key = form.querySelector('#txtClave');
@@ -127,6 +139,7 @@ export function mountListas(container, id, notify) {
     } else {
       editing = itemId;
       form.hidden = false; cancel.hidden = false;
+      openForm(id === 1 ? 'Editar producto disponible' : `Editar · ${item.nombre ?? item.texto}`);
       for (const element of form.elements) {
         if (!element.name) continue;
         element.value = item[element.name] ?? '';

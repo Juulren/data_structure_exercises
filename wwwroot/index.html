@@ -2,9 +2,16 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#175c48">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f7faf6">
+  <meta name="color-scheme" content="light dark">
   <title>Laboratorio · Estructuras de datos</title>
+  <script>
+    try { const tema = localStorage.getItem('ed-tema'); if (tema) document.documentElement.dataset.theme = tema; } catch {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@500&display=swap">
   <link rel="stylesheet" href="/css/material.css">
   <link rel="stylesheet" href="/css/animations.css">
   <link rel="stylesheet" href="/css/listas.css">
@@ -13,22 +20,50 @@
   <script type="module" src="/js/app.js"></script>
 </head>
 <body>
-  <button id="btnAbrirMenu" class="menu-toggle" aria-controls="navEjercicios" aria-expanded="false">☰ <span>Ejercicios</span></button>
+  <div class="ambient" aria-hidden="true">
+    <svg id="svgFondo" class="bg-network" preserveAspectRatio="none"></svg>
+    <svg class="shape shape-hex" viewBox="0 0 100 100"><path d="M50 4 90 27v46L50 96 10 73V27z"/></svg>
+    <svg class="shape shape-tri" viewBox="0 0 100 100"><path d="M50 8 94 88H6z"/></svg>
+    <svg class="shape shape-ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="24"/></svg>
+    <svg class="shape shape-square" viewBox="0 0 100 100"><rect x="14" y="14" width="72" height="72" rx="16"/></svg>
+  </div>
+  <div id="prgCarga" class="top-progress" role="progressbar" aria-label="Cargando datos" hidden><span></span></div>
   <div id="menuBackdrop" class="backdrop" hidden></div>
   <aside id="navEjercicios" class="drawer" aria-label="Navegación de ejercicios">
-    <a class="brand" href="#inicio"><span class="brand-icon">ed.</span><span>Estructuras de datos<small>LABORATORIO INTERACTIVO</small></span></a>
-    <div class="course-label">UNIDAD II <span>12 ejercicios</span></div>
+    <div class="drawer-header">
+      <a class="brand" href="#inicio" title="Inicio">
+        <span class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 40 40"><path class="brand-link" d="M12 20h16"/><circle class="brand-node n1" cx="9" cy="20" r="5"/><circle class="brand-node n2" cx="31" cy="20" r="5"/><circle class="brand-node n3" cx="20" cy="9" r="3"/></svg>
+        </span>
+        <span class="brand-text">Estructuras de datos<small>Laboratorio interactivo</small></span>
+      </a>
+      <button id="btnColapsarMenu" class="icon-button rail-toggle" type="button" aria-label="Contraer menú lateral" aria-pressed="false"></button>
+    </div>
+    <div class="course-label"><span>Unidad II</span><span class="chip chip-small">12 ejercicios</span></div>
     <nav id="navModulos" aria-label="Módulos"></nav>
-    <footer class="drawer-footer"><span class="status-dot"></span> 12 ejercicios · Todos disponibles</footer>
+    <footer class="drawer-footer"><span class="status-dot"></span><span class="nav-label">12 ejercicios · Todos disponibles</span></footer>
   </aside>
-  <main id="mainContenido" tabindex="-1">
-    <header class="topbar"><span>INGENIERÍA / ESTRUCTURAS DE DATOS</span><span id="lblEstado" role="status">Conectando…</span></header>
-    <section id="viewContenido" aria-labelledby="lblTitulo"></section>
-    <footer class="page-footer">Aprende el proceso. Visualiza la estructura.</footer>
-  </main>
+  <div class="app-shell">
+    <header class="top-app-bar">
+      <svg class="header-waves" viewBox="0 0 2400 80" preserveAspectRatio="none" aria-hidden="true"></svg>
+      <button id="btnAbrirMenu" class="icon-button menu-toggle" type="button" aria-controls="navEjercicios" aria-expanded="false" aria-label="Abrir menú de ejercicios"></button>
+      <div class="app-bar-title">
+        <span id="lblRuta" class="app-bar-overline">Ingeniería / Estructuras de datos</span>
+        <span id="lblVista" class="app-bar-headline">Vista general</span>
+      </div>
+      <span id="lblEstado" class="chip status-chip" role="status">Conectando…</span>
+      <button id="btnTema" class="icon-button theme-toggle" type="button" aria-label="Cambiar a modo oscuro"></button>
+    </header>
+    <main id="mainContenido" tabindex="-1">
+      <section id="viewContenido" aria-labelledby="lblTitulo"></section>
+      <footer class="page-footer">Aprende el proceso. Visualiza la estructura.</footer>
+    </main>
+  </div>
+  <nav id="navInferior" class="bottom-nav" aria-label="Navegación principal"></nav>
+  <button id="fabPrincipal" class="fab" type="button" hidden><span class="fab-icon"></span><span class="fab-label"></span></button>
   <div id="lblNotificacion" class="snackbar" role="status" aria-live="polite" hidden></div>
   <dialog id="dlgInformacion" aria-labelledby="lblModalTitulo">
-    <form method="dialog"><span class="eyebrow">UNIDAD II COMPLETA</span><h2 id="lblModalTitulo">Listas, pilas y colas disponibles</h2><p>Los 12 ejercicios incluyen estructuras personalizadas y visualizaciones. Los datos se comparten en memoria durante la ejecución del servidor y se pierden al detenerlo. El juego conserva su tiempo al cambiar de vista o recargar.</p><button id="btnCerrarModal" class="primary">Entendido</button></form>
+    <form method="dialog"><span class="eyebrow">UNIDAD II COMPLETA</span><h2 id="lblModalTitulo">Listas, pilas y colas disponibles</h2><p>Los 12 ejercicios incluyen estructuras personalizadas y visualizaciones. Los datos se comparten en memoria durante la ejecución del servidor y se pierden al detenerlo. El juego conserva su tiempo al cambiar de vista o recargar.</p><div class="dialog-actions"><button id="btnCerrarModal" class="primary">Entendido</button></div></form>
   </dialog>
 </body>
 </html>

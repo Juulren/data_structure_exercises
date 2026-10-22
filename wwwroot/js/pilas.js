@@ -1,5 +1,6 @@
 import { apiRequest } from './api.js';
 import { drawStack, escapeHtml as esc } from './svgEngine.js';
+import { setFab } from './ui.js';
 
 const specs = {
   6: { title: 'Invertir palabra', path: 'invertir', description: 'Descubre cómo una pila invierte el orden: el último carácter que entra es el primero que sale.', inputs: 'Una palabra de hasta 80 caracteres visibles, sin espacios interiores. Se conservan mayúsculas, acentos y emojis.', process: 'Insertar cada carácter con Push y extraer todos con Pop. Los caracteres Unicode combinados se mantienen unidos.', output: 'Palabra invertida y recorrido animado de las operaciones LIFO.' },
@@ -14,7 +15,7 @@ function formFor(id) {
   return `<form id="frmApilar" class="entry-form" novalidate>${field('Valor', 'Entero a apilar', 11, true)}<button id="btnApilar" class="primary">Push · Apilar</button><button id="btnDesapilar" class="secondary" type="button">Pop · Retirar tope</button></form><form id="frmReemplazar" class="entry-form delete-form" novalidate>${field('Viejo', 'Valor viejo', 11, true)}${field('Nuevo', 'Valor nuevo', 11, true)}<button id="btnReemplazar" class="primary">Reemplazar coincidencias</button></form>`;
 }
 function controls(max, cursor) {
-  return `<div class="trace-controls" aria-label="Controles del proceso"><div class="trace-buttons"><button id="btnInicioPaso" class="secondary" ${cursor === 0 ? 'disabled' : ''}>↤ Inicio</button><button id="btnAnteriorPaso" class="secondary" ${cursor === 0 ? 'disabled' : ''}>← Anterior</button><button id="btnReproducir" class="primary">Reproducir</button><button id="btnSiguientePaso" class="secondary" ${cursor === max ? 'disabled' : ''}>Siguiente →</button><button id="btnFinalPaso" class="secondary" ${cursor === max ? 'disabled' : ''}>Final ↦</button></div><label id="lblPaso" for="rngPaso">Paso ${cursor} de ${max}</label><input id="rngPaso" type="range" min="0" max="${max}" value="${cursor}" aria-labelledby="lblPaso"></div>`;
+  return `<div class="trace-controls" aria-label="Controles del proceso"><div class="trace-buttons"><button id="btnInicioPaso" class="secondary" ${cursor === 0 ? 'disabled' : ''}>↤ Inicio</button><button id="btnAnteriorPaso" class="secondary" ${cursor === 0 ? 'disabled' : ''}>← Anterior</button><button id="btnReproducir" class="primary">Reproducir</button><button id="btnSiguientePaso" class="secondary" ${cursor === max ? 'disabled' : ''}>Siguiente →</button><button id="btnFinalPaso" class="secondary" ${cursor === max ? 'disabled' : ''}>Final ↦</button></div><label id="lblPaso" for="rngPaso">Paso ${cursor} de ${max}</label><input id="rngPaso" type="range" min="0" max="${max}" value="${cursor}" aria-labelledby="lblPaso" style="--fill:${max ? cursor / max * 100 : 0}%"></div>`;
 }
 function traceTable(headers, rows, caption) {
   return `<div class="table-scroll"><table id="dgvPasos"><caption>${esc(caption)}</caption><thead><tr>${headers.map(h => `<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
@@ -57,6 +58,10 @@ export function mountPilas(container, id, notify) {
   const errorLabel = root.querySelector('#lblErrorPila');
   const reset = root.querySelector('#btnReiniciarPila');
   const dialog = root.querySelector('#dlgReiniciarPila');
+  setFab({ label: id === 9 ? 'Apilar valor' : 'Nueva operación', iconName: id === 9 ? 'layers' : 'plus', action: () => {
+    const field = root.querySelector('.workspace-card input');
+    field.scrollIntoView({ behavior: 'smooth', block: 'center' }); field.focus({ preventScroll: true });
+  } });
   function stop() {
     clearTimeout(timer); timer = null;
     const button = root.querySelector('#btnReproducir');
@@ -65,6 +70,7 @@ export function mountPilas(container, id, notify) {
   function frame() {
     root.querySelector('#pnlFotograma').innerHTML = frames(id, state, cursor);
     root.querySelector('#rngPaso').value = String(cursor);
+    root.querySelector('#rngPaso').style.setProperty('--fill', `${max ? cursor / max * 100 : 0}%`);
     root.querySelector('#lblPaso').textContent = `Paso ${cursor} de ${max}`;
     root.querySelector('#btnInicioPaso').disabled = cursor === 0;
     root.querySelector('#btnAnteriorPaso').disabled = cursor === 0;
