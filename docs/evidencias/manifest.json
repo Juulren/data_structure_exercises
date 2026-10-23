@@ -1,0 +1,240 @@
+{
+  "fecha": "22 de octubre de 2026",
+  "figuras": [
+    {
+      "name": "00_inicio",
+      "caption": "Menú principal de los tres módulos y acceso a los doce ejercicios."
+    },
+    {
+      "name": "01_resultado",
+      "caption": "Se escanearon tres productos y se retiró producto 1. Permanecen dos disponibles y uno retirado; se conservan sus cantidades y precios aleatorios."
+    },
+    {
+      "name": "01_error",
+      "caption": "Editar una cantidad con letras muestra Introducir sólo números y conserva el producto original."
+    },
+    {
+      "name": "02_resultado",
+      "caption": "Cuatro números aleatorios se distribuyen en pares e impares sin alterar el orden relativo ni perder elementos."
+    },
+    {
+      "name": "02_faltantes",
+      "caption": "Al generar con el campo vacío se muestra Hay datos faltantes."
+    },
+    {
+      "name": "02_error",
+      "caption": "Las letras en la cantidad producen Introducir sólo números."
+    },
+    {
+      "name": "03_resultado",
+      "caption": "Ana con 8.5 y Carla con 7 están aprobadas. Luis con 6.9 se extrae a reprobados; el límite de aprobación es 7."
+    },
+    {
+      "name": "03_error",
+      "caption": "La calificación 11 se rechaza porque el rango permitido es de 0 a 10."
+    },
+    {
+      "name": "04_antes",
+      "caption": "El catálogo queda ordenado como Aceite, Arroz y Leche; el total inicial es $101.75."
+    },
+    {
+      "name": "04_resultado",
+      "caption": "Al eliminar la clave P3 se retira Leche. Aceite y Arroz conservan el orden y el total cambia a $75.25."
+    },
+    {
+      "name": "04_error",
+      "caption": "La clave P1 ya existe y la aplicación rechaza el registro duplicado."
+    },
+    {
+      "name": "05_resultado",
+      "caption": "Se crean listas para F, O, P y Z. Agregar Zorro genera un nuevo grupo sin modificar los existentes."
+    },
+    {
+      "name": "05_error",
+      "caption": "Una entrada con espacios se rechaza: se solicita una sola palabra formada por letras."
+    },
+    {
+      "name": "06_apilado",
+      "caption": "Después de Push U, Push T y Push M, M queda en el tope de la pila."
+    },
+    {
+      "name": "06_resultado",
+      "caption": "Los Pop extraen M, T y U; la salida construida es MTU y la pila termina vacía."
+    },
+    {
+      "name": "06_error",
+      "caption": "La inversión rechaza frases con espacios interiores y solicita una sola palabra."
+    },
+    {
+      "name": "07_resultado",
+      "caption": "RADAR coincide con su lectura inversa. El primer carácter R coincide con el R extraído mediante Pop."
+    },
+    {
+      "name": "07_negativo",
+      "caption": "UTM no es palíndromo: el primer carácter U es diferente del M extraído de la pila."
+    },
+    {
+      "name": "07_error",
+      "caption": "Una entrada formada solo por signos se rechaza y se pide al menos una letra o un número."
+    },
+    {
+      "name": "08_resultado",
+      "caption": "En la segunda columna, 9 + 8 = 17. Se apila 7 y se conserva un acarreo de 1. Las tres pilas muestran el estado intermedio real."
+    },
+    {
+      "name": "08_pasos",
+      "caption": "Las sumas parciales producen, de unidades a millares, 6, 7, 3 y 4. Al extraer result-stack se obtiene 4376."
+    },
+    {
+      "name": "08_error",
+      "caption": "Un operando con letras produce Introducir sólo números; el resultado válido anterior se conserva."
+    },
+    {
+      "name": "09_resultado",
+      "caption": "El reemplazo de 2 por 9 modifica dos coincidencias. La pila desde el tope queda 8, 9, 5, 9, conservando el orden."
+    },
+    {
+      "name": "09_pop",
+      "caption": "Pop retira el 8 y deja al 9 como nuevo tope, confirmando el comportamiento LIFO."
+    },
+    {
+      "name": "09_error",
+      "caption": "Las letras no se aceptan como valor entero y se muestra Introducir sólo números."
+    },
+    {
+      "name": "10_ingreso",
+      "caption": "El modal confirma la inserción de Ana al final con turno, movimiento y hora de llegada."
+    },
+    {
+      "name": "10_resultado",
+      "caption": "Ana ocupa el frente y Luis el final. La tabla muestra el orden FIFO y los índices del arreglo circular."
+    },
+    {
+      "name": "10_atencion",
+      "caption": "Se atiende primero a Ana y el modal muestra los segundos reales que esperó desde su llegada."
+    },
+    {
+      "name": "10_error",
+      "caption": "Atender una cola vacía se rechaza sin alterar los datos."
+    },
+    {
+      "name": "12_resultado",
+      "caption": "ABC-123 es el frente de salida y XYZ-456 el final de entrada. Los enlaces Siguiente y Anterior cierran el círculo."
+    },
+    {
+      "name": "12_ticket",
+      "caption": "El ticket del primer auto contiene placas, propietario, entrada, salida, segundos y el importe calculado a $2.00 por segundo."
+    },
+    {
+      "name": "12_error",
+      "caption": "La salida se rechaza cuando el estacionamiento está vacío."
+    },
+    {
+      "name": "11_fila",
+      "caption": "Los coches aparecen automáticamente y muestran el color solicitado. Solo el coche del frente puede ser atendido."
+    },
+    {
+      "name": "11_error",
+      "caption": "Elegir un color diferente al solicitado produce un error y no retira el coche del frente."
+    },
+    {
+      "name": "11_resultado",
+      "caption": "El color correcto pinta y retira el primer coche. La zona Atendido conserva el coche pintado y aumenta la puntuación."
+    },
+    {
+      "name": "11_final",
+      "caption": "Al acumular cinco coches termina la partida. El modal informa la cantidad pintada y el tiempo total registrado por el servidor."
+    }
+  ],
+  "datos": {
+    "numeros": {
+      "original": [
+        968,
+        89,
+        875,
+        308
+      ],
+      "pares": [
+        968,
+        308
+      ],
+      "impares": [
+        89,
+        875
+      ]
+    },
+    "banco": {
+      "cliente": {
+        "turno": 1,
+        "nombre": "Ana",
+        "movimiento": "Depósito",
+        "horaLlegada": "2026-10-23T01:34:13.3930825Z"
+      },
+      "horaAtencion": "2026-10-23T01:34:13.9153124Z",
+      "segundosEspera": 0.5222299
+    },
+    "ticket": {
+      "folio": "372fb145-7425-4669-a775-e0196431df9e",
+      "auto": {
+        "id": 1,
+        "placas": "ABC-123",
+        "propietario": "Ana",
+        "horaEntrada": "2026-10-23T01:34:14.4575895Z"
+      },
+      "horaSalida": "2026-10-23T01:34:14.7660581Z",
+      "segundos": 0.3084686,
+      "tarifa": 2,
+      "importe": 0.6169372
+    },
+    "juego": {
+      "partidaId": "e525621e-6b9f-4292-85d0-244ef9e87574",
+      "estado": "Finalizado",
+      "coches": [
+        {
+          "id": 2,
+          "color": "Rojo",
+          "horaLlegada": "2026-10-23T01:34:45.8667524Z"
+        },
+        {
+          "id": 3,
+          "color": "Verde",
+          "horaLlegada": "2026-10-23T01:35:05.8667524Z"
+        },
+        {
+          "id": 4,
+          "color": "Rojo",
+          "horaLlegada": "2026-10-23T01:35:25.8667524Z"
+        },
+        {
+          "id": 5,
+          "color": "Amarillo",
+          "horaLlegada": "2026-10-23T01:35:45.8667524Z"
+        },
+        {
+          "id": 6,
+          "color": "Rojo",
+          "horaLlegada": "2026-10-23T01:36:05.8667524Z"
+        }
+      ],
+      "atendido": {
+        "id": 1,
+        "color": "Morado",
+        "horaLlegada": "2026-10-23T01:34:25.8667524Z"
+      },
+      "colores": [
+        "Naranja",
+        "Rojo",
+        "Verde",
+        "Azul",
+        "Amarillo",
+        "Morado"
+      ],
+      "pintados": 1,
+      "tiempoSegundos": 120,
+      "intervaloSegundos": 20,
+      "proximoEnSegundos": null,
+      "mejorPuntaje": 1,
+      "recordTiempoSegundos": 120
+    }
+  }
+}
